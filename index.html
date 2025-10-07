@@ -196,7 +196,7 @@
                 <input type="file" id="file_foto" accept="image/jpeg" required>
             </div>
             <div class="form-group">
-                <label for="file_pass">4. Pas Bandara Lama (jika perpanjang)</label>
+                <label for="file_pass">4. Pass Bandara Lama (jika perpanjang)</label>
                 <input type="file" id="file_pass" accept="image/jpeg,application/pdf">
             </div>
             
@@ -210,8 +210,8 @@
         const submitButton = document.getElementById('submitButton');
         const statusDiv = document.getElementById('status');
         
-        // PENTING: Ganti URL di bawah dengan URL Web App dari Google Apps Script Anda
-        const scriptURL = 'GANTI_DENGAN_URL_WEB_APP_ANDA'; 
+        // URL WEB APP ANDA SUDAH DIMASUKKAN DI SINI
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyoLxD6MSRZSCqh3DXRqInEdyKMqsv4uMYKBhecM3o69kz3BF_WTuokrFSt2-7cMHv9/exec'; 
 
         // Fungsi untuk mengubah file menjadi teks base64
         function readFileAsBase64(file) {
