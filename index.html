@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Upload Dokumen</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; max-width: 700px; margin: 40px auto; padding: 25px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9; }
+        h1 { color: #333; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        input[type="file"] { padding: 5px; }
+        button { background-color: #007bff; color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        #status { margin-top: 25px; font-weight: bold; padding: 15px; border-radius: 5px; text-align: center; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
 
+    <h1>Formulir Upload Dokumen</h1>
+    <p>Mohon isi semua data dan unggah semua file yang diperlukan.</p>
+
+    <form id="uploadForm">
+        <div class="form-group">
+            <label for="nama">Nama Lengkap:</label>
+            <input type="text" id="nama" required>
+        </div>
+        <div class="form-group">
+            <label for="bidang">Bidang:</label>
+            <input type="text" id="bidang" required>
+        </div>
+        <div class="form-group">
+            <label for="file_sk">1. SK (.pdf)</label>
+            <input type="file" id="file_sk" accept=".pdf" required>
+        </div>
+        <div class="form-group">
+            <label for="file_ktp">2. KTP (.jpg)</label>
+            <input type="file" id="file_ktp" accept="image/jpeg" required>
+        </div>
+        <div class="form-group">
+            <label for="file_foto">3. Foto Latar Putih (.jpg)</label>
+            <input type="file" id="file_foto" accept="image/jpeg" required>
+        </div>
+        <div class="form-group">
+            <label for="file_pass">4. Paspor Lama (jika perpanjang)</label>
+            <input type="file" id="file_pass" accept="image/jpeg,application/pdf">
+        </div>
+
+        <button type="submit" id="submitButton">Kirim Dokumen</button>
+    </form>
+
+    <div id="status"></div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const submitButton = document.getElementById('submitButton');
+        const statusDiv = document.getElementById('status');
+        const scriptURL = 'GANTI_DENGAN_URL_WEB_APP_ANDA'; // <-- NANTI KITA GANTI URL INI
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) { resolve(null); return; }
+                const reader = new FileReader();
+                reader.onload = () => resolve({
+                    fileName: file.name,
+                    mimeType: file.type,
+                    fileData: reader.result.split(',')[1]
+                });
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitButton.disabled = true;
+            statusDiv.className = '';
+            statusDiv.textContent = 'Mengunggah file, mohon tunggu...';
+
+            try {
+                const fileInputs = [
+                    document.getElementById('file_sk').files[0],
+                    document.getElementById('file_ktp').files[0],
+                    document.getElementById('file_foto').files[0],
+                    document.getElementById('file_pass').files[0]
+                ];
+
+                const fileDataArray = await Promise.all(fileInputs.map(readFileAsBase64));
+
+                const payload = {
+                    nama: document.getElementById('nama').value,
+                    bidang: document.getElementById('bidang').value,
+                    files: fileDataArray
+                };
+
+                const response = await fetch(scriptURL, { method: 'POST', body: JSON.stringify(payload) });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    statusDiv.textContent = 'Sukses! ' + result.message;
+                    statusDiv.className = 'success';
+                    form.reset();
+                } else { throw new Error(result.message); }
+            } catch (error) {
+                statusDiv.textContent = 'Terjadi kesalahan: ' + error.message;
+                statusDiv.className = 'error';
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
