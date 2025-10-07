@@ -4,62 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulir Upload Dokumen</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; max-width: 700px; margin: 40px auto; padding: 25px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9; }
-        h1 { color: #333; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        input[type="file"] { padding: 5px; }
-        button { background-color: #007bff; color: white; width: 100%; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-        #status { margin-top: 25px; font-weight: bold; padding: 15px; border-radius: 5px; text-align: center; }
-        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        /* Variabel Warna untuk kemudahan kustomisasi */
+        :root {
+            --primary-color: #007bff; /* Biru cerah */
+            --secondary-color: #6c757d; /* Abu-abu gelap */
+            --accent-color: #28a745; /* Hijau sukses */
+            --danger-color: #dc3545; /* Merah error */
+            --bg-light: #f8f9fa; /* Latar belakang terang */
+            --text-dark: #343a40; /* Teks gelap */
+            --text-light: #ffffff; /* Teks terang */
+            --border-color: #dee2e6; /* Warna border */
+        }
+
+        /* Pengaturan Dasar Halaman */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px; /* Padding untuk layar kecil */
+            color: var(--text-dark);
+            /* Pastikan path ke gambar sudah benar */
+            background-image: url('images/3584554974.jpg'); 
+            background-size: cover; /* Menutupi seluruh area */
+            background-position: center; /* Posisi gambar di tengah */
+            background-attachment: fixed; /* Gambar tetap saat scroll */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            backdrop-filter: blur(3px); /* Memberi efek blur pada background */
+            box-sizing: border-box;
+        }
+
+        /* Kotak Formulir Utama */
+        .container {
+            max-width: 700px;
+            width: 100%; 
+            background-color: rgba(255, 255, 255, 0.95); /* Putih semi-transparan */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Judul */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+        }
+
+        /* Paragraf Deskripsi */
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+
+        /* Grup Elemen Formulir */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Label untuk setiap input */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1em;
+        }
+
+        /* Styling untuk Input Teks dan File */
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="file"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        /* Tombol Kirim */
+        button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #0056b3; /* Warna sedikit lebih gelap saat disentuh */
+            transform: translateY(-2px); /* Efek sedikit terangkat */
+        }
+
+        button:disabled {
+            background-color: var(--secondary-color);
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        /* Pesan Status (Sukses atau Error) */
+        #status {
+            margin-top: 25px;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1em;
+            display: none; /* Sembunyikan secara default */
+        }
+
+        .success {
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            border: 1px solid #218838;
+            display: block; /* Tampilkan jika sukses */
+        }
+
+        .error {
+            background-color: var(--danger-color);
+            color: var(--text-light);
+            border: 1px solid #bd2130;
+            display: block; /* Tampilkan jika error */
+        }
+
+        /* Penyesuaian untuk layar kecil (HP) */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Formulir Upload Dokumen</h1>
-    <p>Mohon isi semua data dan unggah semua file yang diperlukan.</p>
+    <div class="container">
+        <h1>Formulir Upload Dokumen</h1>
+        <p>Mohon isi semua data dan unggah semua file yang diperlukan.</p>
 
-    <form id="uploadForm">
-        <div class="form-group">
-            <label for="nama">Nama Lengkap:</label>
-            <input type="text" id="nama" required>
-        </div>
-        <div class="form-group">
-            <label for="bidang">Bidang:</label>
-            <input type="text" id="bidang" required>
-        </div>
-        <div class="form-group">
-            <label for="file_sk">1. SK (.pdf)</label>
-            <input type="file" id="file_sk" accept=".pdf" required>
-        </div>
-        <div class="form-group">
-            <label for="file_ktp">2. KTP (.jpg)</label>
-            <input type="file" id="file_ktp" accept="image/jpeg" required>
-        </div>
-        <div class="form-group">
-            <label for="file_foto">3. Foto Latar Putih (.jpg)</label>
-            <input type="file" id="file_foto" accept="image/jpeg" required>
-        </div>
-        <div class="form-group">
-            <label for="file_pass">4. Paspor Lama (jika perpanjang)</label>
-            <input type="file" id="file_pass" accept="image/jpeg,application/pdf">
-        </div>
-
-        <button type="submit" id="submitButton">Kirim Dokumen</button>
-    </form>
-
-    <div id="status"></div>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap:</label>
+                <input type="text" id="nama" required>
+            </div>
+            <div class="form-group">
+                <label for="bidang">Bidang:</label>
+                <input type="text" id="bidang" required>
+            </div>
+            <div class="form-group">
+                <label for="file_sk">1. SK (.pdf)</label>
+                <input type="file" id="file_sk" accept=".pdf" required>
+            </div>
+            <div class="form-group">
+                <label for="file_ktp">2. KTP (.jpg)</label>
+                <input type="file" id="file_ktp" accept="image/jpeg" required>
+            </div>
+            <div class="form-group">
+                <label for="file_foto">3. Foto Latar Putih (.jpg)</label>
+                <input type="file" id="file_foto" accept="image/jpeg" required>
+            </div>
+            <div class="form-group">
+                <label for="file_pass">4. Paspor Lama (jika perpanjang)</label>
+                <input type="file" id="file_pass" accept="image/jpeg,application/pdf">
+            </div>
+            
+            <button type="submit" id="submitButton">Kirim Dokumen</button>
+        </form>
+        <div id="status"></div>
+    </div> 
 
     <script>
         const form = document.getElementById('uploadForm');
         const submitButton = document.getElementById('submitButton');
         const statusDiv = document.getElementById('status');
-        const scriptURL = 'GANTI_DENGAN_URL_WEB_APP_ANDA'; // <-- NANTI KITA GANTI URL INI
+        
+        // PENTING: Ganti URL di bawah dengan URL Web App dari Google Apps Script Anda
+        const scriptURL = 'GANTI_DENGAN_URL_WEB_APP_ANDA'; 
 
+        // Fungsi untuk mengubah file menjadi teks base64
         function readFileAsBase64(file) {
             return new Promise((resolve, reject) => {
                 if (!file) { resolve(null); return; }
@@ -74,36 +228,44 @@
             });
         }
 
+        // Event listener saat formulir dikirim
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitButton.disabled = true;
             statusDiv.className = '';
-            statusDiv.textContent = 'Mengunggah file, mohon tunggu...';
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = 'Mengunggah file, mohon tunggu... Ini mungkin perlu waktu beberapa saat.';
 
             try {
+                // Mengambil semua file dari input
                 const fileInputs = [
                     document.getElementById('file_sk').files[0],
                     document.getElementById('file_ktp').files[0],
                     document.getElementById('file_foto').files[0],
                     document.getElementById('file_pass').files[0]
                 ];
-
+                
+                // Memproses semua file secara bersamaan
                 const fileDataArray = await Promise.all(fileInputs.map(readFileAsBase64));
 
+                // Menyiapkan data untuk dikirim ke Google Script
                 const payload = {
                     nama: document.getElementById('nama').value,
                     bidang: document.getElementById('bidang').value,
                     files: fileDataArray
                 };
 
+                // Mengirim data
                 const response = await fetch(scriptURL, { method: 'POST', body: JSON.stringify(payload) });
                 const result = await response.json();
 
                 if (result.status === 'success') {
                     statusDiv.textContent = 'Sukses! ' + result.message;
                     statusDiv.className = 'success';
-                    form.reset();
-                } else { throw new Error(result.message); }
+                    form.reset(); // Mengosongkan formulir setelah sukses
+                } else { 
+                    throw new Error(result.message); 
+                }
             } catch (error) {
                 statusDiv.textContent = 'Terjadi kesalahan: ' + error.message;
                 statusDiv.className = 'error';
